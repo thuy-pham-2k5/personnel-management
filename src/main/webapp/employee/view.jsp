@@ -52,6 +52,5 @@
         <button type="submit" class="btn btn-primary">Add</button>
     </form>
 </div>
-<div><a href="home.jsp"><button>Back</button></a></div>
 </body>
 </html>
