@@ -45,8 +45,8 @@
                     <td>${employee.getSalary()}</td>
                     <td>
                         <a href="/employees?action=view&id=${employee.id}"><button>View</button></a>
-                        <a href="/employees?action=view&id=${employee.id}"><button>Edit</button></a>
-                        <a href="/employees?action=view&id=${employee.id}"><button>Delete</button></a>
+                        <a href="/employees?action=edit&id=${employee.id}"><button>Edit</button></a>
+                        <a href="/employees?action=delete&id=${employee.id}"><button>Delete</button></a>
                     </td>
                 </tr>
             </c:forEach>

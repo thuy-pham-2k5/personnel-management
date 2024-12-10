@@ -25,27 +25,46 @@ public class EmployeeServlet extends HttpServlet {
             case "add":
                 addNewEmployee(req, resp);
                 break;
-            case "create":
+            case "edit":
+                editEmployee (req, resp);
                 break;
             default:
                 break;
         }
     }
 
+    private void editEmployee(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        String name = req.getParameter("name");
+        int age = Integer.parseInt(req.getParameter("age"));
+        String position = req.getParameter("position");
+        String department = req.getParameter("department");
+        double salary = Double.parseDouble(req.getParameter("salary"));
+        Employee employee = this.employeeService.getEmployeeById(id);
+        employee.setName(name);
+        employee.setAge(age);
+        employee.setPosition(position);
+        employee.setDepartment(department);
+        employee.setSalary(salary);
+        employeeService.update(id, employee);
+
+        resp.sendRedirect("/employees");
+    }
+
     private void addNewEmployee(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        int id = (int) (Math.random() * 1000);
-//        String name = req.getParameter("name");
-//        int age = Integer.parseInt(req.getParameter("age"));
-//        String position = req.getParameter("position");
-//        String department = req.getParameter("department");
-//        double salary = Double.parseDouble(req.getParameter("salary"));
-//
-//        Employee employee = new Employee(id, name, age, position, department, salary);
-//        this.employeeService.add(employee);
-//
-//        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/view.jsp");
-//        req.setAttribute("employee", employee);
-//        dispatcher.forward(req, resp);
+        int id = (int) (Math.random() * 1000);
+        String name = req.getParameter("name");
+        int age = Integer.parseInt(req.getParameter("age"));
+        String position = req.getParameter("position");
+        String department = req.getParameter("department");
+        double salary = Double.parseDouble(req.getParameter("salary"));
+
+        Employee employee = new Employee(id, name, age, position, department, salary);
+        this.employeeService.add(employee);
+
+        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/view.jsp");
+        req.setAttribute("employee", employee);
+        dispatcher.forward(req, resp);
     }
 
     @Override
@@ -57,14 +76,24 @@ public class EmployeeServlet extends HttpServlet {
             case "add":
                 showAddEmployee(req, resp);
                 break;
+            case "edit":
+                showEditEmployee (req, resp);
             default:
                 showAllEmployee(req, resp);
                 break;
         }
     }
 
+    private void showEditEmployee(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        Employee employee = this.employeeService.getEmployeeById(id);
+        req.setAttribute("employee", employee);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/edit.jsp");
+        dispatcher.forward(req, resp);
+    }
+
     private void showAddEmployee(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/employee/view.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/view.jsp");
         dispatcher.forward(req, resp);
     }
 
@@ -72,7 +101,7 @@ public class EmployeeServlet extends HttpServlet {
         List<Employee> employees = this.employeeService.getAllEmployee();
         System.out.println(employees);
         req.setAttribute("employees", employees);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/employee/home.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/home.jsp");
         dispatcher.forward(req, resp);
     }
 }
