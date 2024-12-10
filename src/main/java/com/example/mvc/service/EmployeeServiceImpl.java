@@ -20,4 +20,24 @@ public class EmployeeServiceImpl implements EmployeeService{
     public List<Employee> getAllEmployee() {
         return new ArrayList<>(employees.values());
     }
+
+    @Override
+    public Employee getEmployeeById(int id) {
+        return employees.get(id);
+    }
+
+    @Override
+    public void add(Employee employee) {
+        employees.put(employee.getId(), employee);
+    }
+
+    @Override
+    public void update(int id, Employee employee) {
+        employees.put(id, employee);
+    }
+
+    @Override
+    public void delete(int id) {
+        employees.remove(id);
+    }
 }
