@@ -40,4 +40,15 @@ public class EmployeeServiceImpl implements EmployeeService{
     public void delete(int id) {
         employees.remove(id);
     }
+
+    @Override
+    public List<Employee> search(String keyword) {
+        List<Employee> employeeList = new ArrayList<>();
+        for (Employee employee : employees.values()) {
+            if (employee.getName().contains(keyword)) {
+                employeeList.add(employee);
+            }
+        }
+        return employeeList;
+    }
 }
