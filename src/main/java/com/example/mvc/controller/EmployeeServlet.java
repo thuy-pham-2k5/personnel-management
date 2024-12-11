@@ -3,6 +3,8 @@ package com.example.mvc.controller;
 import com.example.mvc.model.Employee;
 import com.example.mvc.service.EmployeeService;
 import com.example.mvc.service.EmployeeServiceImpl;
+
+import javax.lang.model.SourceVersion;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,14 +12,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "EmployeeServlet", value = "/employees")
 public class EmployeeServlet extends HttpServlet {
     private final EmployeeService employeeService = new EmployeeServiceImpl();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String action = req.getParameter("action");
         if (action == null)
             action = "";
@@ -28,12 +33,29 @@ public class EmployeeServlet extends HttpServlet {
             case "edit":
                 edit(req, resp);
                 break;
+            case "view":
+                view(resp);
+                break;
+            case "search":
+                search(req, resp);
             default:
                 break;
         }
     }
 
-    private void edit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void search(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String keyword = req.getParameter("keyword");
+        List<Employee> employees = this.employeeService.search(keyword);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/home.jsp");
+        req.setAttribute("employees", employees);
+        dispatcher.forward(req, resp);
+    }
+
+    private void view(HttpServletResponse resp) throws IOException {
+        resp.sendRedirect("/employees");
+    }
+
+    private void edit(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         String name = req.getParameter("name");
         int age = Integer.parseInt(req.getParameter("age"));
@@ -51,7 +73,7 @@ public class EmployeeServlet extends HttpServlet {
         resp.sendRedirect("/employees");
     }
 
-    private void add(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void add(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int id = (int) (Math.random() * 1000);
         String name = req.getParameter("name");
         int age = Integer.parseInt(req.getParameter("age"));
@@ -62,7 +84,6 @@ public class EmployeeServlet extends HttpServlet {
         Employee employee = new Employee(id, name, age, position, department, salary);
         this.employeeService.add(employee);
 
-        req.setAttribute("employee", employee);
         resp.sendRedirect("/employees");
     }
 
@@ -76,23 +97,36 @@ public class EmployeeServlet extends HttpServlet {
                 showAddEmployee(req, resp);
                 break;
             case "edit":
-                showEditEmployee (req, resp);
+            case "view":
+                showEditAndViewEmployee(req, resp);
+                break;
+            case "delete":
+                deleteEmployee(req, resp);
+                break;
             default:
                 showAllEmployee(req, resp);
                 break;
         }
     }
 
-    private void showEditEmployee(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void deleteEmployee(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        employeeService.delete(id);
+        resp.sendRedirect("/employees");
+    }
+
+    private void showEditAndViewEmployee(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         Employee employee = this.employeeService.getEmployeeById(id);
         req.setAttribute("employee", employee);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/edit.jsp");
+        String action = req.getParameter("action");
+        req.setAttribute("action", action);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/edit&view.jsp");
         dispatcher.forward(req, resp);
     }
 
     private void showAddEmployee(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/view.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("employee/add.jsp");
         dispatcher.forward(req, resp);
     }
 

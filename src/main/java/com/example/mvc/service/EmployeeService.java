@@ -14,4 +14,6 @@ public interface EmployeeService {
     public void update(int id, Employee employee);
 
     public void delete(int id);
+    public List<Employee> search (String keyword);
+
 }

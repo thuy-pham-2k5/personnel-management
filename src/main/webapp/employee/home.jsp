@@ -16,7 +16,7 @@
     <a href="/employees?action=add"><button>Add new employee</button></a>
 </div>
 <div>
-    <form action="/employees?action=search" method="get">
+    <form action="/employees?action=search" method="post">
         <input type="text" name="keyword"/>
         <input type="submit" value="Search"/>
     </form>
