@@ -12,7 +12,7 @@
 </head>
 <body>
 <h1>List Customer</h1>
-
+<a href="/customer?action=add"><button class="btn btn-success">Add</button></a>
 <table class="table">
     <thead>
     <tr>
@@ -25,38 +25,21 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach items="customers" var="customer">
+    <c:forEach items="${customers}" var="customer">
         <tr>
             <th>${customer.getId()}</th>
-            <td><img src="${customer.getImageUrl()}"></td>
+            <td><img src="${customer.getImageUrl()}" alt="Image Error"></td>
             <td>${customer.getName()}</td>
             <td>${customer.getPhone()}</td>
             <td>${customer.getEmail()}</td>
             <td>${customer.getAddress()}</td>
             <td>
-                <button >View</button>
+                <a href="/customer?action=view&id=${customer.id}"><button class="btn btn-light">View</button></a>
+                <a href="/customer?action=edit&id=${customer.id}"><button class="btn btn-primary">Update</button></a>
+                <a href="/customer?action=delete&id=${customer.id}"><button class="btn btn-danger">Delete</button></a>
             </td>
         </tr>
     </c:forEach>
-
-    <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-    </tr>
-    <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-    </tr>
-    <tr>
-        <th scope="row">3</th>
-        <td colspan="2">Larry the Bird</td>
-        <td>@twitter</td>
-    </tr>
-
     </tbody>
 </table>
 </body>
